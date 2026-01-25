@@ -25,6 +25,9 @@
 namespace customcertelement_daterange;
 
 use mod_customcert\element_helper;
+use mod_customcert\service\element_renderer;
+use pdf;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
 
@@ -321,11 +324,12 @@ class element extends \mod_customcert\element {
     /**
      * Handles rendering the element on the pdf.
      *
-     * @param \pdf $pdf the pdf object
+     * @param pdf $pdf the pdf object
      * @param bool $preview true if it is a preview, false otherwise
-     * @param \stdClass $user the user we are rendering this for
+     * @param stdClass $user the user we are rendering this for
+     * @param element_renderer|null $renderer the renderer service
      */
-    public function render($pdf, $preview, $user) {
+    public function render(pdf $pdf, bool $preview, stdClass $user, ?element_renderer $renderer = null): void {
         global $DB;
 
         // If there is no element data, we have nothing to display.
@@ -704,12 +708,13 @@ class element extends \mod_customcert\element {
      * This function is used to render the element when we are using the
      * drag and drop interface to position it.
      *
+     * @param element_renderer|null $renderer the renderer service
      * @return string the html
      */
-    public function render_html() {
+    public function render_html(?element_renderer $renderer = null): string {
         // If there is no element data, we have nothing to display.
         if (empty($this->get_data())) {
-            return;
+            return '';
         }
 
         return element_helper::render_html_content($this, get_string('preview', 'customcertelement_daterange', $this->get_name()));
