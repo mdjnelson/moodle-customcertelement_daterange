@@ -247,6 +247,10 @@ class element extends base_element implements
         return [
             'dateitem' => $formdata->dateitem ?? '',
             'fallbackstring' => $formdata->fallbackstring ?? '',
+            'font' => (string)($formdata->font ?? ''),
+            'fontsize' => (int)($formdata->fontsize ?? 0),
+            'colour' => (string)($formdata->colour ?? ''),
+            'width' => (int)($formdata->width ?? 0),
             'dateranges' => array_values(array_filter(array_map(function ($i) use ($formdata) {
                 if (!empty($formdata->rangedelete[$i])) {
                     return null;
