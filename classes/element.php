@@ -332,6 +332,22 @@ class element extends base_element implements
             $mform->getElement('fallbackstring')->setValue($payload['fallbackstring']);
         }
 
+        if (isset($payload['font'])) {
+            $mform->setDefault('font', $payload['font']);
+        }
+
+        if (isset($payload['fontsize'])) {
+            $mform->setDefault('fontsize', $payload['fontsize']);
+        }
+
+        if (isset($payload['colour'])) {
+            $mform->setDefault('colour', $payload['colour']);
+        }
+
+        if (isset($payload['width'])) {
+            $mform->setDefault('width', $payload['width']);
+        }
+
         if (!empty($payload['dateranges']) && is_array($payload['dateranges'])) {
             foreach ($payload['dateranges'] as $key => $range) {
                 $range = (object)$range;
