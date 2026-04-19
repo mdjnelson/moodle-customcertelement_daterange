@@ -36,6 +36,7 @@ use mod_customcert\element\renderable_element_interface;
 use mod_customcert\element\restorable_element_interface;
 use mod_customcert\element\validatable_element_interface;
 use mod_customcert\element_helper;
+use mod_customcert\service\certificate_repository;
 use mod_customcert\service\element_renderer;
 use MoodleQuickForm;
 use pdf;
@@ -387,13 +388,13 @@ class element extends base_element implements
             // Get the page.
             $page = $DB->get_record('customcert_pages', ['id' => $this->get_pageid()], '*', MUST_EXIST);
             // Get the customcert this page belongs to.
-            $customcert = $DB->get_record('customcert', ['templateid' => $page->templateid], '*', MUST_EXIST);
+            $customcert = (new certificate_repository())->get_by_template_id_or_fail((int)$page->templateid);
             // Now we can get the issue for this user.
             $issue = $DB->get_record(
                 'customcert_issues',
                 ['userid' => $user->id, 'customcertid' => $customcert->id],
                 '*',
-                MUST_EXIST
+                IGNORE_MULTIPLE
             );
 
             switch ($dateitem) {
@@ -439,7 +440,7 @@ class element extends base_element implements
 
                 default:
                     if (strpos((string)$dateitem, 'gradeitem:') === 0) {
-                        $gradeitemid = substr((string)$dateitem, 10);
+                        $gradeitemid = (int)substr((string)$dateitem, 10);
                         $grade = element_helper::get_grade_item_info(
                             $gradeitemid,
                             $dateitem,
